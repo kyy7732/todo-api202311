@@ -22,7 +22,7 @@ class UserServiceTest {
     @DisplayName("중복된 이메일로 화원가입을 시도하면 RuntimeException이 발생해야 한다.")
     void validateEmailTest() {
         //given
-        String email = "abc12334@abc.com";
+        String email = "abc1234@abc.com";
 
         UserRequestSignUpDTO dto = UserRequestSignUpDTO.builder()
                 .email(email)

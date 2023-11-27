@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/todos")
-@CrossOrigin(origins = "http://localhost:3000") // 백과 프론트를 연결시키는 아노테이션
+@CrossOrigin // 백과 프론트를 연결시키는 아노테이션
 public class TodoController {
 
     private final TodoService todoService;
