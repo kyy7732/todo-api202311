@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @ToString @EqualsAndHashCode(of = "id")
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-
 @Entity
 @Table(name = "tbl_user")
 public class User {
@@ -40,6 +39,11 @@ public class User {
 //    @ColumnDefault("'COMMON'")
     @Builder.Default
     private Role role = Role.COMMON; // 유저 권한
+
+    // 등급 수정 메서드
+    public void changeRole(Role role) {
+        this.role = role;
+    }
 
 }
 
