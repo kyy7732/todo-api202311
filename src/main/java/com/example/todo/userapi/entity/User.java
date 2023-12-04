@@ -2,7 +2,6 @@ package com.example.todo.userapi.entity;
 
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -39,6 +38,9 @@ public class User {
 //    @ColumnDefault("'COMMON'")
     @Builder.Default
     private Role role = Role.COMMON; // 유저 권한
+    
+    // 프로필 이미지 경로
+    private String profileImg; // profileImg -> profile_img로 알아서 변환해서 만들어줌
 
     // 등급 수정 메서드
     public void changeRole(Role role) {

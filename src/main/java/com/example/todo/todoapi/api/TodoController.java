@@ -31,7 +31,7 @@ public class TodoController {
             @AuthenticationPrincipal TokenUserInfo userInfo, // @AuthenticationPrincipal: 로그인 객체를 가져오는 아노테이션
             // jwtfilter에서 인증정보를 등록 했기 때문에 userInfo를 가져올수 있다.
             @Validated @RequestBody TodoCreateRequestDTO requestDTO,
-            BindingResult result
+            BindingResult result // 검증 에러가 발생하면 4xx에러가 발생
     ) {
         if(result.hasErrors()) {
             log.warn("DTO 검증 에러 발생: {}", result.getFieldError());
@@ -57,6 +57,7 @@ public class TodoController {
                             .builder()
                             .error(e.getMessage())
                             .build());
+
         }
     }
 
