@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Setter @Getter
+@Getter
 @ToString @EqualsAndHashCode(of = "id")
 @NoArgsConstructor @AllArgsConstructor
 @Builder
@@ -42,10 +42,18 @@ public class User {
     // 프로필 이미지 경로
     private String profileImg; // profileImg -> profile_img로 알아서 변환해서 만들어줌
 
+    private String accessToken; // 카카오 로그인 시 발급받는 accessToken을 저장 -> 로그아웃 때 필요
+
     // 등급 수정 메서드
     public void changeRole(Role role) {
         this.role = role;
     }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+
 
 }
 
