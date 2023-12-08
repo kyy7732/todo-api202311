@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.List;
+
 // @Configuration // 설정 클래스 용도로 사용하도록 스프링에 등록하는 아노테이션
 @EnableWebSecurity // 시큐리티 설정 파일로 사용할 클래스 선언.
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
 
+    private List<?> sdlfkj;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
