@@ -65,7 +65,6 @@ public class TodoService {
         return TodoListResponseDTO.builder()
                 .todos(dtoList)
                 .build();
-        // TodoListResponseDTO에 에러가 어떻게 들어가는지?
     }
 
     private User getUser(String userId) {

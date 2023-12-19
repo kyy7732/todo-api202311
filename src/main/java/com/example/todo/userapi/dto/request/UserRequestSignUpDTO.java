@@ -2,6 +2,9 @@ package com.example.todo.userapi.dto.request;
 
 import com.example.todo.userapi.entity.User;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -12,6 +15,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(of = "email")
 @NoArgsConstructor @AllArgsConstructor
 @Builder
+@Slf4j
 public class UserRequestSignUpDTO {
 
     @NotBlank
@@ -35,6 +39,8 @@ public class UserRequestSignUpDTO {
                 .profileImg(uploadedFilePath)
                 .build();
     }
+
+
 
 
 

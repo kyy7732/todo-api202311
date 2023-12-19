@@ -37,3 +37,13 @@ kakao:
 # 업로드 파일 저장 경로
 upload:
   path: C:/todo_upload
+
+# s3 접근 설정
+aws:
+  credentials:
+    accessKey: AKIARCC4SJZTZWW75MPT  # s3 버킷에서 에세스키 시크릿키 가져옴
+    secretKey: 9JPq0Vc8b71CWgjsmLlzr54Z25/XUJFeYqZu43eK
+  region: ap-northeast-2 # 리전
+  bucketName: todo-app-upload-file-bucket7732 # 버킷 이름
+
+
