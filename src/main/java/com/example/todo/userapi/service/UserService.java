@@ -2,6 +2,7 @@ package com.example.todo.userapi.service;
 
 import com.example.todo.auth.TokenProvider;
 import com.example.todo.auth.TokenUserInfo;
+import com.example.todo.aws.S3Service;
 import com.example.todo.exception.NoRegisteredArgumentsException;
 import com.example.todo.userapi.dto.request.LoginRequestDTO;
 import com.example.todo.userapi.dto.request.UserRequestSignUpDTO;
@@ -38,6 +39,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final S3Service s3Service;
 
     @Value("${kakao.client_id}")
     private String KAKAO_CLIENT_ID;
@@ -137,32 +139,37 @@ public class UserService {
      */
     public String uploadProfileImage(MultipartFile profileImg) throws IOException {
 
-        // 루트 디렉토리가 실존하는 지 확인 후 존재하지 않으면 생성.
-        File rootDir = new File(uploadRootPath);
-        if(!rootDir.exists()) rootDir.mkdirs();
-        
         // 파일명을 유니크하게 변경 (이름 충돌 가능성을 대비)
         // UUID와 원본파일명을 혼합. -> 규칙은 없어요.
         String uniqueFilename
                 = UUID.randomUUID() + "_" + profileImg.getOriginalFilename();
-    
-        // 파일을 저장
-        File uploadFile = new File(uploadRootPath + "/" + uniqueFilename);
-        profileImg.transferTo(uploadFile);
 
-        return uniqueFilename;
+        // 루트 디렉토리가 실존하는 지 확인 후 존재하지 않으면 생성. (s3에 저장을 안할때 사용)
+//        File rootDir = new File(uploadRootPath);
+//        if(!rootDir.exists()) rootDir.mkdirs();
+
+
+        // 파일을 저장
+//        File uploadFile = new File(uploadRootPath + "/" + uniqueFilename);
+//        profileImg.transferTo(uploadFile);
+
+        // 파일을 s3 버킷에 저장
+        // profileImg를 바이트로 바꾸고 이름은 uniqueFIle로 변경(랜덤 네임)
+        return  s3Service.uploadToS3Bucket(profileImg.getBytes(), uniqueFilename);
 
     }
 
     public String findProfilePath(String userId) {
 
         User user = userRepository.findById(userId).orElseThrow();
+        return user.getProfileImg();
 
-        if(user.getProfileImg().startsWith("http://")) { // 카카오 로그인한 사람은 이렇게 나옴
-            return user.getProfileImg();
-        }
+//        String profileImg = user.getProfileImg();
+//        if(user.getProfileImg().startsWith("http://")) { // 카카오 로그인한 사람은 http: 이렇게 나옴
+//            return user.getProfileImg();
+//        }
         // DB에 저장되는 profile_img는 파일명. -> service가 가지고 있는 Root Path와 연결해서 리턴.
-        return uploadRootPath + "/" + user.getProfileImg();
+//        return uploadRootPath + "/" + user.getProfileImg();
     }
 
     public LoginResponseDTO kakaoService(String code) {
@@ -183,17 +190,17 @@ public class UserService {
             // 이메일이 중복되지 않았다 -> 이전에 로그인 한 적이 없음 -> DB에 데이터를 세팅
             User saved = userRepository.save(dto.toEntity((String) responseData.get("access_token")));
         }
-            // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
-            User foundUser = userRepository.findByEmail(dto.getKakaoAccount().getEmail())
-                    .orElseThrow();
+        // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
+        User foundUser = userRepository.findByEmail(dto.getKakaoAccount().getEmail())
+                .orElseThrow();
 
 
-            String token = tokenProvider.createToken(foundUser);
+        String token = tokenProvider.createToken(foundUser);
 
-            foundUser.setAccessToken((String) responseData.get("access_token"));
-            userRepository.save(foundUser);
+        foundUser.setAccessToken((String) responseData.get("access_token"));
+        userRepository.save(foundUser);
 
-            return new LoginResponseDTO(foundUser, token);
+        return new LoginResponseDTO(foundUser, token);
     }
 
     private KakaoUserDTO getKakaoUserInfo(String accessToken) {
@@ -276,6 +283,6 @@ public class UserService {
                     = template.exchange(reqUri, HttpMethod.POST, new HttpEntity<>(headers), String.class);
             return responseData.getBody();
         }
-            return null;
+        return null;
     }
 }

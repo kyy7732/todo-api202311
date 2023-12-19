@@ -1,5 +1,6 @@
 
-.yml
+resources
+*.yml
 
 .gradle
 build/
