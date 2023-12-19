@@ -57,7 +57,6 @@ public class S3Service {
                 .bucket(bucketName) // 버킷 이름
                 .key(fileName) // 파일명
                 .build();
-
         // 오브젝트를 버킷에 업로드(위에서 생성한 오브젝트, 업로드 하고자 하는 파일(바이트 배열)
         s3.putObject(request, RequestBody.fromBytes(uploadFile));
 
